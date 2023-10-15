@@ -1,0 +1,30 @@
+// Custom checked exception class
+class MySpecialNumberException extends Exception {
+    public MySpecialNumberException(String message) {
+        super(message);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            myfunc(10);
+            // Call myfunc with other values here
+        } catch (MySpecialNumberException e) {
+            System.out.println("Caught MySpecialNumberException: " + e.getMessage());
+        }
+    }
+
+    // Method that throws MySpecialNumberException for certain input values
+    static void myfunc(int x) throws MySpecialNumberException {
+        if (x == 10) {
+            throw new MySpecialNumberException("Input is 10: MySpecialNumberException occurred!");
+        } else if (x == 20) {
+            throw new MySpecialNumberException("Input is 20: MySpecialNumberException occurred!");
+        } else if (x == 30) {
+            throw new MySpecialNumberException("Input is 30: MySpecialNumberException occurred!");
+        }
+        // Perform other actions for other input values
+    }
+}
+
