@@ -1,0 +1,59 @@
+SERVER SIDE :
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class MyServer {
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(1234)) {
+            System.out.println("Server started. Waiting for client...");
+
+            while (true) {
+                try (Socket clientSocket = serverSocket.accept();
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+
+                    // Read message from client
+                    String clientMessage = in.readLine();
+                    System.out.println("Received from client: " + clientMessage);
+
+                    // Process the message and send response back to client
+                    if (clientMessage.startsWith("Hello My name is ")) {
+                        String name = clientMessage.substring("Hello My name is ".length());
+                        out.println("Walikum Salam, " + name);
+                    } else {
+                        out.println("Invalid message format.");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+CLIENT SIDE:
+import java.io.*;
+import java.net.Socket;
+
+public class MyClient {
+    public static void main(String[] args) {
+        try (Socket socket = new Socket("localhost", 1234);
+             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+            // Get user input
+            System.out.print("Enter your name: ");
+            String name = userInput.readLine();
+
+            // Send message to server
+            out.println("Hello My name is " + name);
+
+            // Receive and print server response
+            String serverResponse = in.readLine();
+            System.out.println("Server: " + serverResponse);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
